@@ -1,0 +1,51 @@
+<!-- Using Jinja2 Block -->
+{% extends 'base.html' %} {% block Feed %}
+    <div class="card">
+        <h1 class="main-heading">Feed</h1>
+        <div id="content">
+            {% for articles in articles_data %}
+                {% for article in articles %}
+                    <h3>{{article.get('title')}}</h3>
+                    <p>{{article.get('description')}} <a href="{{article.get('link')}}" target="_blank">read more</a></p>
+                    {% if article.get('image') != None  %}
+                        <img src="{{article.get('image')}}">
+                    {% endif %}
+                {% endfor %}
+                <br><hr><br>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Styling for webpage -->
+    <style>
+        img {
+            width: 500px;
+        }
+        a {
+            color: black;
+        }
+        .card {
+            margin: 0 20rem;
+            margin-bottom: 3rem;
+        }
+
+        @media screen and (max-width: 1400px) {
+            .card {
+                margin: 0 10rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .card {
+                margin: 0 5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .card h3{
+            font-size: 1.5rem
+        }
+    </style>
+
+{% endblock Feed %}
