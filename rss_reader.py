@@ -1,29 +1,20 @@
-from bs4 import BeautifulSoup
-import requests
+import feedparser
 
-url = requests.get("https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss")
+# Define the URL of the RSS feed
+url = "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
 
-url_webparser = "https://uptime-mercury-api.azurewebsites.net/webparser"
-data = {
-    "url": "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
-}
+# Parse the RSS feed
+feed = feedparser.parse(url)
 
-# Send the POST request
-response = requests.post(url_webparser, json=data)
+# Print the feed title
+print(f"Feed Title: {feed.feed.title}")
 
-# Print the response
-print(response.text)
+# Print the feed link
+print(f"Feed Link: {feed.feed.link}")
 
-soup = BeautifulSoup(url.content, "xml")
-items = soup.find_all("item")
-
-# Loop through each item
-for item in items:
-    title = item.title.text
-    link = item.link.text
-    description = item.description.text
-
-    print(f"Title: {title}")
-    print(f"Link: {link}")
-    print(f"Description: {description}")
-    print("\n")
+# Print the titles of each feed item
+for entry in feed.entries:
+    print(f"Item Title: {entry.title}")
+    print(f"Item Link: {entry.link}")
+    print(f"Item Description: {entry.description}")
+    print("---")
