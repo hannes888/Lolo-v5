@@ -1,0 +1,50 @@
+body {
+    background-color: #eaeaea;  /* make the page background gray */
+}
+
+#articles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.article {
+    width: 30vw;  /* a third of the viewport width */
+    height: 30vh;  /* a third of the viewport height */
+    border: none;
+    border-radius: 0;
+    margin: 10px;
+    padding: 0;
+    background-color: #ffffff;
+    box-sizing: border-box;  /* include border and padding in the box's total width and height */
+    overflow: auto;  /* add scrollbars if the content is larger than the box */
+    display: flex;  /* make the article a flex container */
+    flex-direction: column;  /* stack the children vertically */
+}
+
+.article h2 {
+    margin: 0;
+    padding: 10px;
+    color: #333;
+    flex-grow: 1;  /* allow the title to take up remaining space */
+}
+
+.article p {
+    padding: 10px;
+    color: #666;
+    flex-grow: 1;  /* allow the summary to take up remaining space */
+}
+
+.article .media {
+    overflow: hidden;  /* hide anything that goes outside the box */
+    flex-grow: 1;  /* allow the media to take up remaining space */
+}
+
+.article .media img {
+    width: 100%;  /* make the image take up the full width of its container */
+    height: auto;  /* maintain the image's aspect ratio */
+}
+
+.article.no-text .media img {
+    height: 100%;  /* make the image take up the full height of its container */
+}
