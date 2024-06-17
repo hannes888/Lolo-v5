@@ -1,15 +1,26 @@
 body {
     background-color: #eaeaea;  /* make the page background gray */
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    margin: 0;
+    padding: 0;
 }
 
 #articles {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-left: 20vw;
+    padding-right: 3%;
+    padding-left: 3%;
+    padding-top: 3%;
 }
 
 .article {
-    width: 30vw;  /* a third of the viewport width */
+    width: 30%;  /* a third of the viewport width */
     height: 30vh;  /* a third of the viewport height */
     border: none;
     border-radius: 0;
@@ -47,4 +58,41 @@ body {
 
 .article.no-text .media img {
     height: 100%;  /* make the image take up the full height of its container */
+}
+
+#sidepanel {
+    position: fixed;
+    width: 20vw; /* quarter of the viewport width */
+    height: 100vh; /* 100% of the viewport height */
+    background-color: #7676ff; /* change as needed */
+}
+
+#rounded-input {
+    width: calc(100% - 30px);
+    height: 50px;
+    border: 0;
+    border-radius: 15px; /* this creates the rounded edges */
+    padding: 5px 10px;
+    background-color: rgb(172, 172, 255);
+    box-sizing: border-box;
+    margin: 15px 15px 15px 15px;
+}
+
+#rounded-input::placeholder {
+    color: rgb(18, 19, 120);
+}
+
+#rounded-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+}
+
+h2 a {
+    color: inherit; /* make the link color the same as the text color */
+    text-decoration: none; /* remove the underline */
+    font-family: inherit;
 }
