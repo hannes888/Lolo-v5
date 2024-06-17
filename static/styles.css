@@ -16,7 +16,7 @@ html {
     margin-left: 20vw;
     padding-right: 3%;
     padding-left: 3%;
-    padding-top: 3%;
+    padding-top: 2%;
 }
 
 .article {
@@ -87,7 +87,7 @@ html {
     box-shadow: 0 0 10px #719ECE;
 }
 
-h2 {
+h1,h2,p {
     font-family: Arial, sans-serif;
 }
 
@@ -95,4 +95,8 @@ h2 a {
     color: inherit; /* make the link color the same as the text color */
     text-decoration: none; /* remove the underline */
     font-family: inherit;
+}
+
+#feed-titles {
+    margin-left: 30px;
 }

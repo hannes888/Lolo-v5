@@ -5,29 +5,36 @@
     <title>News Feed</title>
     <!-- Add link to your CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-     <script>
-        window.onload = function() {
-            var input = document.getElementById('rounded-input');
-            input.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    // Prevent the form from being submitted normally
-                    event.preventDefault();
-                    // Send a POST request to the Flask route
-                    fetch('/save_value', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'value=' + encodeURIComponent(input.value)
-                    }).then(function(response) {
-                        if (response.ok) {
-                            // If the POST request was successful, clear the input
+    <script>
+    window.onload = function() {
+        const input = document.getElementById('rounded-input');
+        const feedTitles = document.getElementById('feed-titles');
+        input.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                fetch('/save_value', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'value=' + encodeURIComponent(input.value)
+                }).then(function(response) {
+                    if (response.ok) {
+                        // If the POST request was successful, get the text from the response
+                        response.text().then(function(new_feed_title) {
+                            // Add the new feed to the table
+                            const row = document.createElement('tr');
+                            const cell = document.createElement('td');
+                            cell.textContent = new_feed_title;
+                            row.appendChild(cell);
+                            feedTitles.querySelector('table').appendChild(row);
                             input.value = '';
-                        }
-                    });
-                }
-            });
-        }
+                        });
+                    }
+                });
+            }
+        });
+    }
     </script>
 </head>
 <body>
@@ -35,6 +42,20 @@
         <label>
             <input type="text" id="rounded-input" placeholder="Add news feed here...">
         </label>
+        <div id="feed-titles">
+            <table>
+            {% for feed in feeds %}
+                <tr>
+                    <td>
+                        <form action="/view_feed" method="post">
+                            <input type="hidden" name="feed_title" value="{{ feed.title }}">
+                            <button type="submit">{{ feed.title }}</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
     </div>
     <div id="articles">
         {% for article in articles %}

@@ -1,24 +1,19 @@
 from datetime import datetime
 
 from article import Article
+from feed import Feed
+from feed_types import FeedType
 from rss_reader import get_rss_feed
 from flask import Flask, render_template, request
 
 # Initialize the Flask app
 app = Flask(__name__)
 
-# Configure the app, e.g., from a config file or environment variables
-# app.config.from_object('config.DevelopmentConfig')
 
 # Parse rss feed
 url = "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
-feed = get_rss_feed(url=url)
-
-# for entry in feed.entries:
-#     print(entry.published)
-
-
-feeds = []
+first_feed = Feed(get_rss_feed(url=url), FeedType.News)
+feeds = [first_feed]
 
 
 def generate_articles(rss_feed):
@@ -53,26 +48,46 @@ def generate_articles(rss_feed):
 
 
 # Create article objects
-articles = generate_articles(feed)
+articles = generate_articles(first_feed)
 
 
 @app.route('/')
 def index():
-    return render_template('news_feed.html', articles=articles)
+    return render_template('news_feed.html', articles=articles, feeds=feeds)
 
 
 @app.route('/save_value', methods=['POST'])
 def save_value():
     # Get the value from the form data
-    value = request.form.get('value')
+    input_url = request.form.get('value')
+    new_feed = Feed(get_rss_feed(url=input_url), FeedType.News)
     # Add the value to the list
-    feeds.append(value)
-    # Return a success response
-    print(feeds)
-    return '', 200
+    if add_feed_to_feeds(new_feed):
+        # Return a success response
+        return new_feed.title, 200
+    else:
+        return "", 500
 
 
-# Add more routes here
+@app.route('/view_feed', methods=['POST'])
+def view_feed():
+    feed_title = request.form.get('feed_title')
+    # ... your code here to handle the feed ...
+    return render_template('feed_view.html', feed_title=feed_title)
+
+
+def add_feed_to_feeds(feed_to_add):
+    """
+    Add a feed to the feeds list if it is not already present.
+
+    :param feed_to_add: A feed object to add to the feeds list.
+    :return: True if the feed was added, False otherwise.
+    """
+    if any(feed.link == feed_to_add.link for feed in feeds):
+        return False
+    feeds.append(feed_to_add)
+    return True
+
 
 if __name__ == "__main__":
     app.run()

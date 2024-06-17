@@ -6,6 +6,8 @@ import feedparser
 # # Parse the RSS feed
 # feed = feedparser.parse(url)
 #
+#
+#
 # # Print the feed title
 # print(f"Feed Title: {feed.feed.title}")
 #
@@ -13,10 +15,12 @@ import feedparser
 # print(f"Feed Link: {feed.feed.link}")
 #
 # # Print the titles of each feed item
-# for entry in feed.entries:
+# for entry in feed.entries[::-1]:
 #     print(f"Item Title: {entry.title}")
 #     print(f"Item Link: {entry.link}")
 #     print(f"Item Description: {entry.description}")
+#     if "media_content" in entry:
+#         print(entry.media_content)
 #     print("---")
 
 
