@@ -9,68 +9,71 @@
     window.onload = function() {
         const input = document.getElementById('rounded-input');
         const feedTitles = document.getElementById('feed-titles');
-        input.addEventListener('keypress', function(event) {
+        input.addEventListener('keypress', async function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                fetch('/save_value', {
+                const response = await fetch('/save_value', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: 'value=' + encodeURIComponent(input.value)
-                }).then(function(response) {
-                    if (response.ok) {
-                        // If the POST request was successful, get the text from the response
-                        response.text().then(function(new_feed_title) {
-                            // Add the new feed to the table
-                            const row = document.createElement('tr');
-                            const cell = document.createElement('td');
-                            cell.textContent = new_feed_title;
-                            row.appendChild(cell);
-                            feedTitles.querySelector('table').appendChild(row);
-                            input.value = '';
-                        });
-                    }
                 });
+                if (response.ok) {
+                    location.reload();
+                }
             }
         });
     }
     </script>
+    <script>
+    document.getElementById('feedButton').addEventListener('click', function(event) {
+        const form = document.getElementById('myForm');
+        form.action = '/view_feed';
+    });
+    </script>
 </head>
 <body>
-    <div id="sidepanel">
-        <label>
-            <input type="text" id="rounded-input" placeholder="Add news feed here...">
-        </label>
-        <div id="feed-titles">
-            <table>
-            {% for feed in feeds %}
-                <tr>
-                    <td>
-                        <form action="/view_feed" method="post">
-                            <input type="hidden" name="feed_title" value="{{ feed.title }}">
-                            <button type="submit">{{ feed.title }}</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </table>
-        </div>
+    <div id="top-bar">
+        <h1>
+            {{ big_title }}
+        </h1>
     </div>
-    <div id="articles">
-        {% for article in articles %}
-            <div class="article {% if article.title == "" and article.summary == "" %}no-text{% endif %}">
-                {% if article.media_content %}
-                    <div class="media">
-                        {% for media in article.media_content %}
-                            <img src="{{ media['url'] }}" alt="Media content">
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
-                <p>{{ article.summary }}</p>
+    <div id="main-content">
+        <div id="sidepanel">
+            <label>
+                <input type="text" id="rounded-input" placeholder="Add news feed here...">
+            </label>
+            <div id="feed-titles">
+                <table>
+                {% for feed in feeds %}
+                    <tr>
+                        <td>
+                            <form id="feedForm" method="post" action="/view_feed">
+                                <input type="hidden" name="feed_title" value="{{ feed.title }}">
+                                <button type="submit" class="feed-button">{{ feed.title }}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
             </div>
-        {% endfor %}
+        </div>
+        <div id="articles">
+            {% for article in articles %}
+                <div class="article {% if article.title == "" and article.summary == "" %}no-text{% endif %}">
+                    {% if article.media_content %}
+                        <div class="media">
+                            {% for media in article.media_content %}
+                                <img src="{{ media['url'] }}" alt="Media content">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+                    <p>{{ article.summary }}</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

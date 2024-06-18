@@ -3,6 +3,7 @@ from datetime import datetime
 from article import Article
 from feed import Feed
 from feed_types import FeedType
+from generate_articles import generate_articles
 from rss_reader import get_rss_feed
 from flask import Flask, render_template, request
 
@@ -16,44 +17,13 @@ first_feed = Feed(get_rss_feed(url=url), FeedType.News)
 feeds = [first_feed]
 
 
-def generate_articles(rss_feed):
-    """Generate a list of article objects from a feed."""
-    article_objects = []
-
-    for entry in rss_feed.entries:
-        # Check for media_content
-        if "media_content" in entry:
-            media_content = entry.media_content
-        else:
-            media_content = None
-
-        article = Article(
-            title=entry.title,
-            summary=entry.summary,
-            link=entry.link,
-            published_date=entry.published,
-            media_content=media_content
-        )
-
-        article_objects.append(article)
-
-    # Sort the articles by publishing date
-    article_objects.sort(
-        key=lambda article_object: datetime.strptime(
-            article_object.published_date, "%a, %d %b %Y %H:%M:%S %Z"
-        )
-    )
-
-    return article_objects
-
-
-# Create article objects
+# Create article objects for home page
 articles = generate_articles(first_feed)
 
 
 @app.route('/')
 def index():
-    return render_template('news_feed.html', articles=articles, feeds=feeds)
+    return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=first_feed.title)
 
 
 @app.route('/save_value', methods=['POST'])
@@ -70,10 +40,22 @@ def save_value():
 
 
 @app.route('/view_feed', methods=['POST'])
-def view_feed():
+async def view_feed():
     feed_title = request.form.get('feed_title')
-    # ... your code here to handle the feed ...
-    return render_template('feed_view.html', feed_title=feed_title)
+    # Find the clicked feed
+    clicked_feed = None
+    for feed in feeds:
+        if feed.title == feed_title:
+            clicked_feed = feed
+
+    if clicked_feed is not None:
+        # Generate new articles from the clicked feed
+        global articles
+        articles = generate_articles(clicked_feed)
+    else:
+        articles = generate_articles(first_feed)
+    # Render the template with the new articles
+    return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=feed_title)
 
 
 def add_feed_to_feeds(feed_to_add):

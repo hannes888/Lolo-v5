@@ -1,7 +1,10 @@
 body {
     background-color: #eaeaea;  /* make the page background gray */
     margin: 0;
-    padding: 0;
+}
+
+#main-content {
+    padding-top: 80px;
 }
 
 html {
@@ -63,8 +66,9 @@ html {
 #sidepanel {
     position: fixed;
     width: 20vw; /* quarter of the viewport width */
-    height: 100vh; /* 100% of the viewport height */
-    background-color: #7676ff; /* change as needed */
+    height: calc(100vh - 80px); /* 100% of the viewport height */
+    background-color: #ffffff; /* change as needed */
+    bottom: 0;
 }
 
 #rounded-input {
@@ -99,4 +103,32 @@ h2 a {
 
 #feed-titles {
     margin-left: 30px;
+}
+
+.feed-button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#top-bar {
+    position: fixed;
+    height: 80px;
+    width: 100%;
+    background-color: #121378;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+#top-bar h1 {
+    font-family: arial, sans-serif;
+    color: white;
+    font-size: 50px;
 }
