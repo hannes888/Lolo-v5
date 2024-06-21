@@ -5,33 +5,7 @@
     <title>News Feed</title>
     <!-- Add link to your CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script>
-    window.onload = function() {
-        const input = document.getElementById('rounded-input');
-        const feedTitles = document.getElementById('feed-titles');
-        input.addEventListener('keypress', async function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const response = await fetch('/save_value', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'value=' + encodeURIComponent(input.value)
-                });
-                if (response.ok) {
-                    location.reload();
-                }
-            }
-        });
-    }
-    </script>
-    <script>
-    document.getElementById('feedButton').addEventListener('click', function(event) {
-        const form = document.getElementById('myForm');
-        form.action = '/view_feed';
-    });
-    </script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </head>
 <body>
     <div id="top-bar">
@@ -45,13 +19,22 @@
                 <input type="text" id="rounded-input" placeholder="Add news feed here...">
             </label>
             <div id="feed-titles">
-                <table>
+                <table id="feed-table">
                 {% for feed in feeds %}
                     <tr>
                         <td>
-                            <form id="feedForm" method="post" action="/view_feed">
+                            <form id="feed-form" method="post" action="/view_feed">
                                 <input type="hidden" name="feed_title" value="{{ feed.title }}">
-                                <button type="submit" class="feed-button">{{ feed.title }}</button>
+                                <button type="submit" id="feed-button">{{ feed.title }}</button>
+                                <div class="edit-delete-container">
+                                    <!-- The Edit button -->
+                                    <button type="button" class="edit-delete-buttons edit-button">
+                                        <img src="{{ url_for('static', filename="icons8-edit-50.png") }}" alt="Edit" class="icon">
+                                    </button>
+                                    <button type="submit" class="edit-delete-buttons">
+                                        <img src="{{ url_for('static', filename="icons8-delete-50.png") }}" alt="Delete" class="icon">
+                                    </button>
+                                </div>
                             </form>
                         </td>
                     </tr>
@@ -61,18 +44,39 @@
         </div>
         <div id="articles">
             {% for article in articles %}
-                <div class="article {% if article.title == "" and article.summary == "" %}no-text{% endif %}">
-                    {% if article.media_content %}
-                        <div class="media">
-                            {% for media in article.media_content %}
-                                <img src="{{ media['url'] }}" alt="Media content">
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
-                    <p>{{ article.summary }}</p>
+                <div class="article {% if article.title == "" and article.summary == "" %}no-text
+                        {% elif not article.media_content_url %}no-img{% endif %}">
+                    <div class="article-content-wrapper">
+                        {%  if article.category %}
+                            <p class="category">{{ article.category.upper() }}</p>
+                        {% endif %}
+                        {% if article.media_content_url and article.title != "" %}
+                            <div class="media">
+                                <a href="{{ article.link }}">
+                                    <img src="{{ article.media_content_url }}" alt="Media content">
+                                </a>
+                            </div>
+                            <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+                        {% elif article.media_content_url and article.title == "" %}
+                            <a href="{{ article.link }}">
+                                <img src="{{ article.media_content_url }}" alt="Media content">
+                            </a>
+                        {% else %}
+                            <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+                            <p>{{ article.summary }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
+        </div>
+        <!-- The editing popup -->
+        <div id="popup-edit-title">
+            <div class="popup-content">
+                <span class="close">&times;</span>
+                <p>Edit your title:</p>
+                <label for="title-input"></label><input type="text" id="title-input" name="title">
+                <button type="button" >Save</button>
+            </div>
         </div>
     </div>
 </body>

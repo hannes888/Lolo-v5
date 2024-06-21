@@ -19,9 +19,15 @@ def generate_articles(rss_feed):
         # Check for media_content
         # TODO check media:thumbnail etc
         if "media_content" in entry:
-            media_content = entry.media_content
+            media_content_url = entry.media_content[0]["url"]
         else:
-            media_content = None
+            media_content_url = None
+
+        # Check for categories, choose the first one
+        if "category" in entry:
+            category = entry.category
+        else:
+            category = None
 
         # Check if link attribute exists
         link = entry.link if hasattr(entry, 'link') else 'No link provided'
@@ -31,7 +37,8 @@ def generate_articles(rss_feed):
             summary=entry.summary,
             link=link,
             published_date=entry.published,
-            media_content=media_content
+            media_content_url=media_content_url,
+            category=category,
         )
 
         article_objects.append(article)

@@ -12,6 +12,23 @@ html {
     padding: 0;
 }
 
+#top-bar {
+    position: fixed;
+    height: 80px;
+    width: 100%;
+    background-color: #121378;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    z-index: 1;
+}
+
+#top-bar h1 {
+    font-family: arial, sans-serif;
+    color: white;
+    font-size: 50px;
+}
+
 #articles {
     display: flex;
     flex-wrap: wrap;
@@ -23,44 +40,71 @@ html {
 }
 
 .article {
-    width: 30%;  /* a third of the viewport width */
-    height: 30vh;  /* a third of the viewport height */
+    width: 30%;
+    height: 30vh;
     border: none;
     border-radius: 0;
     margin: 10px;
     padding: 0;
     background-color: #ffffff;
-    box-sizing: border-box;  /* include border and padding in the box's total width and height */
-    overflow: auto;  /* add scrollbars if the content is larger than the box */
-    display: flex;  /* make the article a flex container */
-    flex-direction: column;  /* stack the children vertically */
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 2px #cccccc;
+}
+
+.article-content-wrapper {
+    position: relative;
+    flex-grow: 1;
 }
 
 .article h2 {
-    margin: 0;
-    padding: 10px;
     color: #333;
-    flex-grow: 1;  /* allow the title to take up remaining space */
+    bottom: 0;
+    height: 50%;
+    width: 90%;
+    padding-left: 10px;
+    padding-right: 30px;
 }
 
 .article p {
     padding: 10px;
     color: #666;
-    flex-grow: 1;  /* allow the summary to take up remaining space */
+    flex: 0 0 auto;  /* allow the summary to take up remaining space */
 }
 
 .article .media {
-    overflow: hidden;  /* hide anything that goes outside the box */
-    flex-grow: 1;  /* allow the media to take up remaining space */
+    overflow: hidden;
+    height: 50%;
+    position: relative;
+    top: 0;
+    width: 100%;
 }
 
 .article .media img {
-    width: 100%;  /* make the image take up the full width of its container */
-    height: auto;  /* maintain the image's aspect ratio */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.article.no-text .media img {
+.article.no-text .media {
     height: 100%;  /* make the image take up the full height of its container */
+}
+
+.article.no-img h2 {
+    margin: 0;
+    color: #333;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    padding: 10px;
+}
+
+.article.no-img p {
+    padding: 10px;
+    color: #666;
+    flex: 0 0 auto;  /* allow the summary to take up remaining space */
 }
 
 #sidepanel {
@@ -102,33 +146,90 @@ h2 a {
 }
 
 #feed-titles {
-    margin-left: 30px;
+    margin-left: 15px;
 }
 
-.feed-button {
+#feed-table {
+    width: 100%;
+}
+
+#feed-table tr {
+    padding: 10px 0;
+}
+
+#feed-table td:hover .edit-delete-container {
+    visibility: visible;
+}
+
+form {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 15px;
+}
+
+#feed-button {
     background: none!important;
     border: none;
     padding: 0!important;
-    /*optional*/
     font-family: arial, sans-serif;
-    /*input has OS specific font-family*/
     color: #000000;
     text-decoration: none;
     cursor: pointer;
+    font-size: 20px;
 }
 
-#top-bar {
-    position: fixed;
-    height: 80px;
-    width: 100%;
+.edit-delete-container {
+    visibility: hidden;
+}
+
+.edit-delete-buttons {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.category {
+    border-radius: 15px;
     background-color: #121378;
-    display: flex;
-    align-items: center;
-    padding-left: 15px;
+    position: absolute;
+    margin-left: 10px;
+    z-index: 1;
+    color: white !important;
+    margin-right: 10px;
 }
 
-#top-bar h1 {
-    font-family: arial, sans-serif;
-    color: white;
-    font-size: 50px;
+#popup-edit-title {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover {
+    cursor: pointer;
 }

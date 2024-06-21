@@ -3,9 +3,10 @@
 
 class Article:
     """Article class."""
-    def __init__(self, title, summary, link, published_date, media_content=None):
+    def __init__(self, title, summary, link, published_date, media_content_url=None, category=None):
         self.title = title
         self.summary = summary
-        self.media_content = media_content
+        self.media_content_url = media_content_url
         self.link = link
         self.published_date = published_date
+        self.category = category
