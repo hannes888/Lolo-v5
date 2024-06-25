@@ -20,14 +20,18 @@ def generate_articles(rss_feed):
         # TODO check media:thumbnail etc
         if "media_content" in entry:
             media_content_url = entry.media_content[0]["url"]
+        elif "media_thumbnail" in entry:
+            media_content_url = entry.media_thumbnail[0]["url"]
         else:
             media_content_url = None
 
         # Check for categories, choose the first one
-        if "category" in entry:
+        if "tags" in entry and entry.tags:
+            category = entry.tags[0]['term']
+        elif "category" in entry:
             category = entry.category
         else:
-            category = None
+            category = "OTHER"
 
         # Check if link attribute exists
         link = entry.link if hasattr(entry, 'link') else 'No link provided'

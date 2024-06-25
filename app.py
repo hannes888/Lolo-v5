@@ -10,12 +10,10 @@ from flask import Flask, render_template, request, g
 # Initialize the Flask app
 app = Flask(__name__)
 
-
 # Parse rss feed
 url = "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
-first_feed = Feed(get_rss_feed(url=url), FeedType.News)
+first_feed = Feed(get_rss_feed(url=url))
 feeds = [first_feed]
-
 
 # @app.before_request
 # def before_request():
@@ -29,7 +27,13 @@ articles = generate_articles(first_feed)
 
 @app.route('/')
 def index():
-    return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=first_feed.title)
+    return render_template(
+        'news_feed.html',
+        articles=articles,
+        feeds=feeds,
+        big_title=first_feed.title,
+        current_feed=first_feed
+    )
 
 
 @app.route('/save_value', methods=['POST'])
@@ -61,7 +65,21 @@ def view_feed():
     else:
         articles = generate_articles(first_feed)
     # Render the template with the new articles
-    return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=feed_title)
+    if clicked_feed is None:
+        return render_template(
+            'news_feed.html',
+            articles=articles,
+            feeds=feeds,
+            big_title=first_feed.title,
+            current_feed=first_feed
+        )
+    return render_template(
+        'news_feed.html',
+        articles=clicked_feed.articles,
+        feeds=feeds,
+        big_title=feed_title,
+        current_feed=clicked_feed
+    )
 
 
 @app.route("/delete_feed", methods=['POST'])
@@ -69,6 +87,24 @@ def delete_feed():
     feed_title = request.form.get('feed_title')
     feeds[:] = [feed for feed in feeds if feed.title != feed_title]
     return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=feed_title)
+
+
+@app.route("/change_feed_title", methods=['POST'])
+def change_feed_title():
+    # Get the JSON data sent in the POST request
+    data = request.get_json()
+
+    # Access the 'original_title' and 'new_title' values
+    original_title = data['original_title']
+    new_title = data['new_title']
+
+    for feed in feeds:
+        if feed.title == new_title:
+            return "Title already exists", 500
+        if feed.title == original_title:
+            feed.title = new_title
+
+    return new_title, 200
 
 
 def add_feed_to_feeds(feed_to_add):
