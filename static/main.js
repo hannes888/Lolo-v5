@@ -1,7 +1,11 @@
 window.onload = function() {
-    const input = document.getElementById('rounded-input');
+
+    const roundedInput = document.getElementById('rounded-input');
     const feedTitles = document.getElementById('feed-titles');
-    input.addEventListener('keypress', async function(event) {
+    const saveButton = document.getElementById("save-button");
+    const titleInput = document.getElementById("title-input");
+
+    roundedInput.addEventListener('keypress', async function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             const response = await fetch('/save_value', {
@@ -9,11 +13,26 @@ window.onload = function() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: 'value=' + encodeURIComponent(input.value)
+                body: 'value=' + encodeURIComponent(roundedInput.value)
             });
             if (response.ok) {
                 location.reload();
             }
+        }
+    });
+
+
+    saveButton.addEventListener('click', async function(event) {
+        event.preventDefault();
+        const response = await fetch('/change_feed_title', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'value=' + encodeURIComponent(titleInput.value)
+        });
+        if (response.ok) {
+            location.reload();
         }
     });
 
@@ -53,10 +72,10 @@ window.onload = function() {
 
     function saveTitle() {
         // Get the input field
-        var inputField = document.getElementById("title-input");
+        const inputField = document.getElementById("title-input");
 
         // Get the value of the input field
-        var title = inputField.value;
+        const title = inputField.value;
 
         // Log the title to the console
         console.log("New title: " + title);
