@@ -33,7 +33,8 @@
                                         <img src="{{ url_for('static', filename="icons8-edit-50.png") }}" alt="Edit" class="icon">
                                     </button>
                                     <!-- Separate form for the Delete button -->
-                                    <form method="POST" action="{{ url_for('delete_feed') }}" style="display: inline-block;">
+                                    <form id="delete-form" method="POST" action="{{ url_for('delete_feed') }}" style="display: inline-block;">
+                                        <input type="hidden" name="feed_title" value="{{ feed.title }}">
                                         <button type="submit" class="edit-delete-buttons delete-button">
                                             <img src="{{ url_for('static', filename='icons8-delete-50.png') }}" alt="Delete" class="icon">
                                         </button>
@@ -78,7 +79,7 @@
                 <span class="close">&times;</span>
                 <p>Edit your title:</p>
                 <label for="title-input"></label><input type="text" id="title-input" name="title">
-                <button type="button" >Save</button>
+                <button id="save-button" type="button">Save</button>
             </div>
         </div>
     </div>

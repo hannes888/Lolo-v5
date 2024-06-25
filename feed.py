@@ -9,7 +9,10 @@ class Feed:
 
     def __init__(self, feed, category=FeedType.News):
         self.feed = feed
-        self.title = feed.feed.title
+        try:
+            self.title = feed.feed.title
+        except AttributeError:
+            self.title = "Title not found"
         self.link = feed.feed.link
         self.category = category
         self.entries = feed.entries
@@ -20,3 +23,14 @@ class Feed:
     def get_next_id(cls):
         cls.next_id += 1
         return cls.next_id
+
+    def to_dict(self):
+        """Return a dictionary representation of the feed object."""
+        return {
+            'title': self.title,
+            'link': self.link,
+            'category': self.category,
+            'entries': self.entries,
+            'articles': self.articles,
+            'id': self.id
+        }

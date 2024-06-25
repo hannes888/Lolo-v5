@@ -21,7 +21,6 @@ window.onload = function() {
         }
     });
 
-
     saveButton.addEventListener('click', async function(event) {
         event.preventDefault();
         const response = await fetch('/change_feed_title', {
