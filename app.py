@@ -5,7 +5,7 @@ from feed import Feed
 from feed_types import FeedType
 from generate_articles import generate_articles
 from rss_reader import get_rss_feed
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, jsonify
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -14,6 +14,7 @@ app = Flask(__name__)
 url = "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
 first_feed = Feed(get_rss_feed(url=url))
 feeds = [first_feed]
+current_feed = first_feed
 
 # @app.before_request
 # def before_request():
@@ -51,6 +52,8 @@ def save_value():
 
 @app.route('/view_feed', methods=['POST'])
 def view_feed():
+    global current_feed
+
     feed_title = request.form.get('feed_title')
     # Find the clicked feed
     clicked_feed = None
@@ -73,9 +76,12 @@ def view_feed():
             big_title=first_feed.title,
             current_feed=first_feed
         )
+
+    current_feed = clicked_feed
+
     return render_template(
         'news_feed.html',
-        articles=clicked_feed.articles,
+        articles=articles,
         feeds=feeds,
         big_title=feed_title,
         current_feed=clicked_feed
@@ -86,7 +92,11 @@ def view_feed():
 def delete_feed():
     feed_title = request.form.get('feed_title')
     feeds[:] = [feed for feed in feeds if feed.title != feed_title]
-    return render_template('news_feed.html', articles=articles, feeds=feeds, big_title=feed_title)
+    return render_template('news_feed.html',
+                           articles=articles,
+                           feeds=feeds,
+                           big_title=feed_title,
+                           current_feed=first_feed)
 
 
 @app.route("/change_feed_title", methods=['POST'])
@@ -105,6 +115,16 @@ def change_feed_title():
             feed.title = new_title
 
     return new_title, 200
+
+
+@app.route('/filter_by_category', methods=['POST'])
+def filter_by_category():
+    global articles
+    selected_category = request.form.get('category').upper()
+
+    articles = [article for article in current_feed.articles if article.category.upper() == selected_category]
+
+    return render_template('articles.html', articles=articles)
 
 
 def add_feed_to_feeds(feed_to_add):

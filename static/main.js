@@ -90,4 +90,18 @@ window.onload = function() {
             popup.style.display = "none";
         }
     }
+
+    // Filter categories
+    $('#category-select').change(function() {
+        const selectedCategory = $(this).val();
+
+        $.ajax({
+            url: '/filter_by_category',
+            method: 'POST',
+            data: { 'category': selectedCategory },
+            success: function(response) {
+                $('#articles').html(response);
+            }
+        });
+    });
 }

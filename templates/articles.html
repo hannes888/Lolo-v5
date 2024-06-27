@@ -1,0 +1,25 @@
+{% for article in articles %}
+    <div class="article {% if article.title == "" and article.summary == "" %}no-text
+            {% elif not article.media_content_url %}no-img{% endif %}">
+        <div class="article-content-wrapper">
+            {%  if article.category %}
+                <p class="category">{{ article.category.upper() }}</p>
+            {% endif %}
+            {% if article.media_content_url and article.title != "" %}
+                <div class="media">
+                    <a href="{{ article.link }}">
+                        <img src="{{ article.media_content_url }}" alt="Media content">
+                    </a>
+                </div>
+                <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+            {% elif article.media_content_url and article.title == "" %}
+                <a href="{{ article.link }}">
+                    <img src="{{ article.media_content_url }}" alt="Media content">
+                </a>
+            {% else %}
+                <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+                <p>{{ article.summary }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

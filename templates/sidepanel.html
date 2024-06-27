@@ -1,0 +1,30 @@
+ <label>
+    <input type="text" id="rounded-input" placeholder="Add news feed here...">
+</label>
+<div id="feed-titles">
+    <table id="feed-table">
+        {% for feed in feeds %}
+            <tr>
+                <td>
+                    <form id="feed-form" method="post" action="/view_feed" style="display: inline-block;">
+                        <input type="hidden" name="feed_title" value="{{ feed.title }}">
+                        <button type="submit" id="feed-button">{{ feed.title }}</button>
+                    </form>
+                    <div class="edit-delete-container" style="display: inline-block;">
+                        <!-- The Edit button -->
+                        <button type="button" class="edit-delete-buttons edit-button">
+                            <img src="{{ url_for('static', filename="icons8-edit-50.png") }}" alt="Edit" class="icon">
+                        </button>
+                        <!-- Separate form for the Delete button -->
+                        <form id="delete-form" method="POST" action="/delete_feed" style="display: inline-block;">
+                            <input type="hidden" name="feed_title" value="{{ feed.title }}">
+                            <button type="submit" class="edit-delete-buttons delete-button">
+                                <img src="{{ url_for('static', filename='icons8-delete-50.png') }}" alt="Delete" class="icon">
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
