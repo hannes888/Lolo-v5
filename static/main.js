@@ -9,7 +9,7 @@ window.onload = function() {
         if (event.key === 'Enter') {
             event.preventDefault();
             event.stopPropagation();
-            const response = await fetch('/save_value', {
+            const response = await fetch('/save_feed', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -18,8 +18,14 @@ window.onload = function() {
             });
             if (response.ok) {
                 location.reload();
+            } else {
+                document.getElementById("feed-exists-popup").style.display = "block";
             }
         }
+    });
+
+    document.getElementById("try-another-feed-button").addEventListener('click', function() {
+        document.getElementById("feed-exists-popup").style.display = "none";
     });
 
     // Get the popup
@@ -71,9 +77,11 @@ window.onload = function() {
         }
     });
 
-    document.getElementById('feed-button').addEventListener('click', function(event) {
-        const form = document.getElementById('feed-form');
-        form.action = '/view_feed';
+    document.querySelectorAll('.open-feed-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const form = document.getElementById('feed-form');
+            form.action = '/view_feed';
+        });
     });
 
     // Get the close button

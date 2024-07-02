@@ -20,7 +20,7 @@ html {
     display: flex;
     align-items: center;
     padding-left: 15px;
-    z-index: 1;
+    z-index: 9999;
 }
 
 #top-bar h1 {
@@ -39,9 +39,27 @@ html {
     padding-top: 2%;
 }
 
+.category {
+    border-radius: 15px;
+    background-color: #121378;
+    position: absolute;
+    margin-left: 10px;
+    z-index: 2;
+    color: white !important;
+    margin-top: 10px;
+    padding: 10px;
+    height: auto;
+}
+
+.category p {
+    padding: 0 !important;
+    color: white !important;
+    margin: 0 !important;
+}
+
 .article {
     width: 30%;
-    height: 30vh;
+    height: 25vh;
     border: none;
     border-radius: 0;
     margin: 10px;
@@ -57,6 +75,7 @@ html {
 .article-content-wrapper {
     position: relative;
     flex-grow: 1;
+    max-height: 100%;
 }
 
 .article h2 {
@@ -64,7 +83,7 @@ html {
     bottom: 0;
     height: 50%;
     width: 90%;
-    padding-left: 10px;
+    padding-left: 20px;
     padding-right: 30px;
 }
 
@@ -72,6 +91,13 @@ html {
     padding: 10px;
     color: #666;
     flex: 0 0 auto;  /* allow the summary to take up remaining space */
+}
+
+a:-webkit-any-link {
+    color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .article .media {
@@ -93,18 +119,13 @@ html {
 }
 
 .article.no-img h2 {
-    margin: 0;
-    color: #333;
-    bottom: 0;
-    height: 50%;
-    width: 100%;
-    padding: 10px;
+    margin-top: 80px;
+    height: auto;
 }
 
 .article.no-img p {
-    padding: 10px;
-    color: #666;
-    flex: 0 0 auto;  /* allow the summary to take up remaining space */
+    margin-top: 30px;
+    padding: 0 30px 0 20px;
 }
 
 #sidepanel {
@@ -139,12 +160,6 @@ h1,h2,p {
     font-family: Arial, sans-serif;
 }
 
-h2 a {
-    color: inherit; /* make the link color the same as the text color */
-    text-decoration: none; /* remove the underline */
-    font-family: inherit;
-}
-
 #feed-titles {
     margin-left: 15px;
 }
@@ -167,14 +182,14 @@ form {
     margin-right: 15px;
 }
 
-#feed-button {
+.open-feed-button {
     background: none!important;
     border: none;
     padding: 0!important;
     font-family: arial, sans-serif;
     color: #000000;
-    text-decoration: none;
     cursor: pointer;
+    font-size: large;
 }
 
 .edit-delete-container {
@@ -192,26 +207,13 @@ form {
     height: 20px;
 }
 
-.category {
-    border-radius: 15px;
-    background-color: #121378;
-    position: absolute;
-    margin-left: 10px;
-    z-index: 2;
-    color: white !important;
-    margin-right: 10px;
-}
-
 #popup-edit-title {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 9999;
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
-    overflow: auto;
-
 }
 
 .popup-content {
@@ -231,4 +233,58 @@ form {
 
 .close:hover {
     cursor: pointer;
+}
+
+#feed-exists-popup {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+#category-filter {
+    margin-left: 15px;
+}
+
+.category-filter {
+  min-width: 350px;
+  position: relative;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  font-size: 1.15rem;
+  padding: 0.675em 6em 0.675em 1em;
+  background-color: #fff;
+  border: 1px solid #caced1;
+  border-radius: 0.25rem;
+  color: #000;
+  cursor: pointer;
+}
+
+.category-filter::before,
+.category-filter::after {
+  --size: 0.3rem;
+  content: "";
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+}
+
+.category-filter::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid black;
+  top: 40%;
+}
+
+.category-filter::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid black;
+  top: 55%;
 }

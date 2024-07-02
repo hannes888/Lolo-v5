@@ -15,10 +15,9 @@
         </h1>
         <div id="category-filter">
             <select id="category-select">
-                {% for feed in feeds %}
-                    {% for category in current_feed.categories %}
-                        <option value="{{ category }}">{{ category }}</option>
-                    {% endfor %}
+                <option value="" disabled selected>Select a category...</option>
+                {% for category in current_feed.categories %}
+                    <option value="{{ category }}">{{ category }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -30,14 +29,20 @@
         <div id="articles">
             {% include 'articles.html' %}
         </div>
-        <!-- The editing popup -->
+        <!-- Popup for editing feed title -->
         <div id="popup-edit-title">
             <div class="popup-content">
                 <span class="close">&times;</span>
-                <p>Edit your title:</p>
+                <p>Edit feed title:</p>
                 <label for="title-input"></label><input type="text" id="title-input" name="title">
                 <button id="save-button" type="button">Save</button>
             </div>
+        </div>
+    </div>
+    <div id="feed-exists-popup" style="display:none;">
+        <div class="popup-content">
+            <p>Feed has already been added</p>
+            <button id="try-another-feed-button">Try another feed address</button>
         </div>
     </div>
 </body>

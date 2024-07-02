@@ -37,7 +37,7 @@ def index():
     )
 
 
-@app.route('/save_value', methods=['POST'])
+@app.route('/save_feed', methods=['POST'])
 def save_value():
     # Get the value from the form data
     input_url = request.form.get('value')
@@ -50,7 +50,7 @@ def save_value():
         return "", 500
 
 
-@app.route('/view_feed', methods=['POST'])
+@app.route('/view_feed', methods=['POST', 'GET'])
 def view_feed():
     global current_feed
 

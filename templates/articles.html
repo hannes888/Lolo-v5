@@ -2,9 +2,14 @@
     <div class="article {% if article.title == "" and article.summary == "" %}no-text
             {% elif not article.media_content_url %}no-img{% endif %}">
         <div class="article-content-wrapper">
+        <!-- Add the category to the article if it exists -->
             {%  if article.category %}
-                <p class="category">{{ article.category.upper() }}</p>
+                <div class="category">
+                    <p>{{ article.category.upper() }}</p>
+                </div>
             {% endif %}
+
+        <!-- Image and title -->
             {% if article.media_content_url and article.title != "" %}
                 <div class="media">
                     <a href="{{ article.link }}">
@@ -12,13 +17,17 @@
                     </a>
                 </div>
                 <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+
+        <!-- Image only, no title -->
             {% elif article.media_content_url and article.title == "" %}
                 <a href="{{ article.link }}">
                     <img src="{{ article.media_content_url }}" alt="Media content">
                 </a>
+
+        <!-- Title and summary, no image -->
             {% else %}
                 <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
-                <p>{{ article.summary }}</p>
+                <p><a href="{{ article.link }}">{{ article.summary }}</a></p>
             {% endif %}
         </div>
     </div>
