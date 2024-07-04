@@ -1,11 +1,7 @@
-from datetime import datetime
-
-from article import Article
 from feed import Feed
-from feed_types import FeedType
 from generate_articles import generate_articles
 from rss_reader import get_rss_feed
-from flask import Flask, render_template, request, g, jsonify
+from flask import Flask, render_template, request
 
 # Initialize the Flask app
 app = Flask(__name__)
