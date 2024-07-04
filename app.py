@@ -12,11 +12,6 @@ first_feed = Feed(get_rss_feed(url=url))
 feeds = [first_feed]
 current_feed = first_feed
 
-# @app.before_request
-# def before_request():
-#     if 'feeds' not in g:
-#         feeds = [first_feed]
-
 
 # Create article objects for home page
 articles = generate_articles(first_feed)

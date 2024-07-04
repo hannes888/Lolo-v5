@@ -6,7 +6,7 @@ api_url = "https://uptime-mercury-api.azurewebsites.net/webparser"
 
 # Define the JSON body for the POST request
 data = {
-    "url": "https://www.nytimes.com/international/"
+    "url": "https://nussknacker.io/"
 }
 
 # Send a POST request to the API
@@ -19,6 +19,7 @@ if response.status_code == 200:
 
     # Access data from the feed
     print(json.dumps(feed, indent=4))
+    print(f"Response text: {response.text}")
 else:
     print(f"Failed to get feed: {response.status_code}")
     print(f"Response text: {response.text}")

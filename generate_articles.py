@@ -1,8 +1,13 @@
 from datetime import datetime
 from article import Article
+import requests
+
+# Define the API endpoint
+api_url = "https://uptime-mercury-api.azurewebsites.net/webparser"
 
 
 def parse_date(date_string):
+    """Parse a date string into a datetime object."""
     for fmt in ["%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S %z"]:
         try:
             return datetime.strptime(date_string, fmt)
@@ -16,36 +21,64 @@ def generate_articles(rss_feed):
     article_objects = []
 
     for entry in rss_feed.entries:
-        # Check for media_content
-        # TODO check media:thumbnail etc
-        if "media_content" in entry:
-            media_content_url = entry.media_content[0]["url"]
-        elif "media_thumbnail" in entry:
-            media_content_url = entry.media_thumbnail[0]["url"]
-        else:
+        # Clear entry from clutter
+        if hasattr(entry, 'link'):
+            entry_link = entry.link
+
+            # Define the JSON body for the POST request
+            data = {
+                "url": f"{entry_link}"
+            }
+
+            # Send a POST request to the API
+            response = requests.post(api_url, json=data)
+            title = None
+            summary = None
             media_content_url = None
 
-        # Check for categories, choose the first one
-        if "tags" in entry and entry.tags:
-            category = entry.tags[0]['term']
-        elif "category" in entry:
-            category = entry.category
-        else:
-            category = "OTHER"
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Parse the response JSON into a Python dictionary
+                article_data = response.json()
 
-        # Check if link attribute exists
-        link = entry.link if hasattr(entry, 'link') else 'No link provided'
+                # Get the article data from the response
+                title = article_data.get("title", None)
+                summary = article_data.get("excerpt", None)
+                media_content_url = article_data.get("lead_image_url", None)
 
-        article = Article(
-            title=entry.title,
-            summary=entry.summary,
-            link=link,
-            published_date=entry.published,
-            media_content_url=media_content_url,
-            category=category,
-        )
+            # Check if article items with none value can be retrieved from the entry using feedparser
+            if title is None:
+                title = entry.title
 
-        article_objects.append(article)
+            if summary is None:
+                summary = entry.summary
+
+            if media_content_url is None:
+                if "media_content" in entry:
+                    media_content_url = entry.media_content[0]["url"]
+                elif "media_thumbnail" in entry:
+                    media_content_url = entry.media_thumbnail[0]["url"]
+                else:
+                    media_content_url = None
+
+            # Check for categories in the xml, choose the first one
+            if "tags" in entry and entry.tags:
+                category = entry.tags[0]['term']
+            elif "category" in entry:
+                category = entry.category
+            else:
+                category = "OTHER"
+
+            article = Article(
+                title=title,
+                summary=summary,
+                link=entry_link,
+                published_date=entry.published,
+                media_content_url=media_content_url,
+                category=category
+            )
+
+            article_objects.append(article)
 
     # Sort the articles by publishing date
     article_objects.sort(
