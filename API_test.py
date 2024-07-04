@@ -6,7 +6,7 @@ api_url = "https://uptime-mercury-api.azurewebsites.net/webparser"
 
 # Define the JSON body for the POST request
 data = {
-    "url": "https://github.com/postlight/parser/blob/main/src/extractors/custom/README.md"
+    "url": "https://www.nytimes.com/international/"
 }
 
 # Send a POST request to the API
