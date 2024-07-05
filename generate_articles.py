@@ -1,6 +1,10 @@
+"""Functions for generating article objects from an RSS feed."""
+
+
 from datetime import datetime
 from article import Article
 import requests
+
 
 # Define the API endpoint
 api_url = "https://uptime-mercury-api.azurewebsites.net/webparser"
@@ -13,40 +17,38 @@ def parse_date(date_string):
             return datetime.strptime(date_string, fmt)
         except ValueError:
             pass
-    raise ValueError(f"time data {date_string} does not match either of the formats %a, %d %b %Y %H:%M:%S %Z or %a, %d %b %Y %H:%M:%S %z")
+    raise ValueError(f"time data {date_string} does not match either of the formats")
 
 
 def generate_articles(rss_feed):
-    """Generate a list of article objects from a feed."""
+    """
+    Generate a list of article objects from a feed.
+    :param rss_feed: An RSS feed object.
+    :return: A list of sorted article objects.
+    """
     article_objects = []
 
     for entry in rss_feed.entries:
-        # Clear entry from clutter
         if hasattr(entry, 'link'):
             entry_link = entry.link
 
-            # Define the JSON body for the POST request
             data = {
                 "url": f"{entry_link}"
             }
 
-            # Send a POST request to the API
+            # WARNING: Using the provided API significantly reduces response times
             response = requests.post(api_url, json=data)
             title = None
             summary = None
             media_content_url = None
 
-            # Check if the request was successful
             if response.status_code == 200:
-                # Parse the response JSON into a Python dictionary
                 article_data = response.json()
-
-                # Get the article data from the response
                 title = article_data.get("title", None)
                 summary = article_data.get("excerpt", None)
                 media_content_url = article_data.get("lead_image_url", None)
 
-            # Check if article items with none value can be retrieved from the entry using feedparser
+            # Check if article items with none value can be retrieved from the entry using feedparser instead
             if title is None:
                 title = entry.title
 

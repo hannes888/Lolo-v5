@@ -1,10 +1,14 @@
 window.onload = function() {
 
     const roundedInput = document.getElementById('rounded-input');
-    const feedTitles = document.getElementById('feed-titles');
     const saveButton = document.getElementById("save-button");
     const titleInput = document.getElementById("title-input");
 
+    /*
+    Event listener for the "Add feed" input field.
+    "Enter" key adds the feed to the database.
+    If the feed already exists, display a popup.
+     */
     roundedInput.addEventListener('keypress', async function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -24,42 +28,33 @@ window.onload = function() {
         }
     });
 
+    // Event listener for the "Try another feed" button in the "Feed already exists" popup
     document.getElementById("try-another-feed-button").addEventListener('click', function() {
         document.getElementById("feed-exists-popup").style.display = "none";
     });
 
-    // Get the popup
     const popup = document.getElementById("popup-edit-title");
-
-    // Get all the "Edit" buttons
     const editButtons = document.getElementsByClassName("edit-button");
 
     // When the user clicks an "Edit" button, open the popup and set the title
     for (let i = 0; i < editButtons.length; i++) {
         editButtons[i].onclick = function() {
-            // Get the associated form
             let form = this.parentElement.previousElementSibling;
-
-            // Get the title of the feed from the hidden input field
             let feedTitle = form.querySelector('input[name="feed_title"]').value;
-
-            // Set the title of the popup to the title of the feed
             popup.setAttribute('title', feedTitle);
-
-            // Display the popup
             popup.style.display = "block";
         }
     }
 
+    /*
+    Event listener for the "Save" button in the "Edit title" popup.
+    Send the new title to the server and reload the page.
+     */
     saveButton.addEventListener('click', async function(event) {
         event.preventDefault();
-        // Get the new title from the input field
         let newTitle = titleInput.value;
-
-        // Get the original title from the popup
         let originalTitle = popup.getAttribute('title');
 
-        // Send the data to the server
         const response = await fetch('/change_feed_title', {
             method: 'POST',
             headers: {
@@ -77,6 +72,7 @@ window.onload = function() {
         }
     });
 
+    // Event listener for opening a feed
     document.querySelectorAll('.open-feed-button').forEach(button => {
         button.addEventListener('click', function(event) {
             const form = document.getElementById('feed-form');
@@ -84,15 +80,14 @@ window.onload = function() {
         });
     });
 
-    // Get the close button
     const span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on <span> (x), close the popup
+    // Close the popup when the user clicks the "x" button
     span.onclick = function() {
         popup.style.display = "none";
     }
 
-    // When the user clicks anywhere outside the popup, close it
+    // Close the popup when the user clicks anywhere outside the popup
     window.onclick = function(event) {
         if (event.target === popup) {
             popup.style.display = "none";
@@ -103,11 +98,13 @@ window.onload = function() {
     $('#category-select').change(function() {
         const selectedCategory = $(this).val();
 
+
         $.ajax({
             url: '/filter_by_category',
             method: 'POST',
             data: { 'category': selectedCategory },
             success: function(response) {
+                // Replace the articles with the filtered articles from the server
                 $('#articles').html(response);
             }
         });

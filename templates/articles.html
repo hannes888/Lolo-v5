@@ -1,3 +1,4 @@
+<!-- Template for displaying articles -->
 {% for article in articles %}
     <div class="article {% if article.title == "" and article.summary == "" %}no-text
             {% elif not article.media_content_url %}no-img{% endif %}">

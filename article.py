@@ -10,13 +10,3 @@ class Article:
         self.link = link
         self.published_date = published_date
         self.category = category
-
-    def to_dict(self):
-        return {
-            'title': self.title,
-            'summary': self.summary,
-            'media_content_url': self.media_content_url,
-            'link': self.link,
-            'published_date': self.published_date,
-            'category': self.category
-        }

@@ -1,5 +1,5 @@
 body {
-    background-color: #f4f4f4;  /* make the page background gray */
+    background-color: #f4f4f4;
     margin: 0;
 }
 
@@ -60,7 +60,7 @@ html {
 
 .article {
     width: 30%;
-    height: 35vh;
+    height: 39vh;
     border: none;
     border-radius: 0;
     margin: 10px;
@@ -86,15 +86,15 @@ html {
     width: 90%;
     padding-left: 20px;
     padding-right: 30px;
-    word-wrap: break-word; /* or overflow-wrap: break-word; */
+    word-wrap: break-word;
     word-break: normal;
 }
 
 .article p {
     padding: 10px;
     color: #666;
-    flex: 0 0 auto;  /* allow the summary to take up remaining space */
-    word-wrap: break-word; /* or overflow-wrap: break-word; */
+    flex: 0 0 auto;
+    word-wrap: break-word;
     word-break: normal;
 }
 
@@ -120,7 +120,7 @@ a:-webkit-any-link {
 }
 
 .article.no-text .media {
-    height: 100%;  /* make the image take up the full height of its container */
+    height: 100%;
 }
 
 .article.no-img h2 {
@@ -135,9 +135,9 @@ a:-webkit-any-link {
 
 #sidepanel {
     position: fixed;
-    width: 20vw; /* quarter of the viewport width */
-    height: calc(100vh - 80px); /* 100% of the viewport height */
-    background-color: #ffffff; /* change as needed */
+    width: 20vw;
+    height: calc(100vh - 80px);
+    background-color: #ffffff;
     bottom: 0;
 }
 
@@ -145,7 +145,7 @@ a:-webkit-any-link {
     width: calc(100% - 30px);
     height: 35px;
     border-width: 1px;
-    border-radius: 15px; /* this creates the rounded edges */
+    border-radius: 15px;
     padding: 5px 10px;
     background-color: white;
     box-sizing: border-box;

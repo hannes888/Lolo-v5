@@ -1,5 +1,4 @@
 """Class for storing feed data."""
-from feed_types import FeedType
 from generate_articles import generate_articles
 
 
@@ -29,5 +28,6 @@ class Feed:
 
     @classmethod
     def get_next_id(cls):
+        """Get the next id for the feed."""
         cls.next_id += 1
         return cls.next_id

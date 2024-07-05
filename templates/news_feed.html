@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>News Feed</title>
-    <!-- Add link to your CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
@@ -39,6 +38,7 @@
             </div>
         </div>
     </div>
+    <!-- Feed already exists popup -->
     <div id="feed-exists-popup" style="display:none;">
         <div class="popup-content">
             <p>Feed has already been added</p>

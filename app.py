@@ -3,22 +3,24 @@ from generate_articles import generate_articles
 from rss_reader import get_rss_feed
 from flask import Flask, render_template, request
 
-# Initialize the Flask app
+
 app = Flask(__name__)
 
-# Parse rss feed
+
+# Parse the default feed
 url = "https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss"
 first_feed = Feed(get_rss_feed(url=url))
 feeds = [first_feed]
 current_feed = first_feed
 
 
-# Create article objects for home page
+# Create article objects for the default feed
 articles = generate_articles(first_feed)
 
 
 @app.route('/')
 def index():
+    # Homepage
     return render_template(
         'news_feed.html',
         articles=articles,
@@ -30,12 +32,10 @@ def index():
 
 @app.route('/save_feed', methods=['POST'])
 def save_value():
-    # Get the value from the form data
+    """Save a new feed to the feeds list."""
     input_url = request.form.get('value')
     new_feed = Feed(get_rss_feed(url=input_url))
-    # Add the value to the list
     if add_feed_to_feeds(new_feed):
-        # Return a success response
         return new_feed.title, 200
     else:
         return "", 500
@@ -43,9 +43,10 @@ def save_value():
 
 @app.route('/view_feed', methods=['POST', 'GET'])
 def view_feed():
+    """Display the articles from the selected feed."""
     global current_feed
-
     feed_title = request.form.get('feed_title')
+
     # Find the clicked feed
     clicked_feed = None
     for feed in feeds:
@@ -56,10 +57,18 @@ def view_feed():
         # Generate new articles from the clicked feed
         global articles
         articles = generate_articles(clicked_feed)
+        current_feed = clicked_feed
+
+        return render_template(
+            'news_feed.html',
+            articles=articles,
+            feeds=feeds,
+            big_title=feed_title,
+            current_feed=clicked_feed
+        )
     else:
-        articles = generate_articles(first_feed)
-    # Render the template with the new articles
-    if clicked_feed is None:
+        # If the feed was not found, display the default feed
+        articles = first_feed.articles
         return render_template(
             'news_feed.html',
             articles=articles,
@@ -68,21 +77,13 @@ def view_feed():
             current_feed=first_feed
         )
 
-    current_feed = clicked_feed
-
-    return render_template(
-        'news_feed.html',
-        articles=articles,
-        feeds=feeds,
-        big_title=feed_title,
-        current_feed=clicked_feed
-    )
-
 
 @app.route("/delete_feed", methods=['POST'])
 def delete_feed():
+    """Delete the selected feed from the feeds list."""
     feed_title = request.form.get('feed_title')
     feeds[:] = [feed for feed in feeds if feed.title != feed_title]
+
     return render_template('news_feed.html',
                            articles=articles,
                            feeds=feeds,
@@ -92,10 +93,8 @@ def delete_feed():
 
 @app.route("/change_feed_title", methods=['POST'])
 def change_feed_title():
-    # Get the JSON data sent in the POST request
+    """Change the title of the selected feed."""
     data = request.get_json()
-
-    # Access the 'original_title' and 'new_title' values
     original_title = data['original_title']
     new_title = data['new_title']
 
@@ -110,6 +109,7 @@ def change_feed_title():
 
 @app.route('/filter_by_category', methods=['POST'])
 def filter_by_category():
+    """Filter the articles by the selected category."""
     global articles
     selected_category = request.form.get('category').upper()
 
