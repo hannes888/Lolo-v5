@@ -43,10 +43,9 @@ html {
     border-radius: 15px;
     background-color: #4b4dff;
     position: absolute;
-    margin-left: 10px;
+    margin: 10px;
     z-index: 2;
     color: white !important;
-    margin-top: 10px;
     padding: 10px;
     height: auto;
 }
